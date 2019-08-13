@@ -5,9 +5,6 @@ export default {
 </script>
 
 <style>
-page{
-  background-color: rgb(233,233,233);
-  }
 .container {
   height: 100%;
   display: flex;

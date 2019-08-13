@@ -44,6 +44,8 @@ export default {
 </script>
 <style lang="less" scoped>
   .diancan{
+    height:100vh;
+    background-color: rgb(233,233,233);
     .diancan-out{
       position:fixed;
       top:332rpx;
