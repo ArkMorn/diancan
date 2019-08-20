@@ -38,7 +38,7 @@
               <p class="item-right-center">好评推荐</p>
               <p class="item-right-bottom">￥{{item.price}}/份</p>
               <div class="stepper">
-                <stepper :product="item"></stepper>
+                <stepper :product="item" :index="index"  @changeCount="changeCount"></stepper>
               </div>
             </div>
           </li>
@@ -89,6 +89,10 @@ export default {
   components: { stepper },
 
   methods: {
+    changeCount(count,index){
+      this.productList[this.selectIndex].productList[index].count=count
+      console.log(this.productList[this.selectIndex].productList[index])
+    },
     // 获取商品数
     getProductCount(data){
       if(data instanceof Array){

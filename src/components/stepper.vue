@@ -24,6 +24,10 @@ export default {
       default: {
         count: 0
       }
+    },
+    index:{
+      type:[Number,String],
+      default:0
     }
   },
   components: {},
@@ -52,7 +56,7 @@ export default {
       this.changeCount()
     },
     changeCount(){
-      this.$emit(changeCount)
+      this.$emit('changeCount',this.product.count,this.index)
     }
   },
 
