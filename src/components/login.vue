@@ -1,7 +1,7 @@
 <template>
-  <div>
-
-
+  <div class="login">
+      <div class="mask"></div>
+      <div class="login-btn"></div>
   </div>
 </template>
 
