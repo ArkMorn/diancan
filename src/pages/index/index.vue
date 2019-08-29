@@ -17,7 +17,7 @@
             @click="chooseList(index)"
             :class="['left-item',{'ischoose':index==selectIndex}]"
             v-for="(item,index) in productList"
-            :key="index"
+            :key="item.typeId"
           >{{item.typeName}}</li>
         </ul>
       </scroll-view>
@@ -26,19 +26,15 @@
         :style="{height:wrapperHeight+'px'}"
         class="index-right page-loadmore-wrapper"
       >
-        <ul class="right-list" v-if="productList[selectIndex]">
-          <li
-            class="right-item"
-            v-for="(item,index) in productList[selectIndex].productList"
-            :key="index"
-          >
+        <ul class="right-list" v-if="productItem.length>0">
+          <li class="right-item" v-for="item in productItem" :key="item.productId">
             <img :src="item.productPic" alt class="item-img" />
             <div class="item-right">
               <p class="item-right-top">{{item.productName}}</p>
               <p class="item-right-center">好评推荐</p>
               <p class="item-right-bottom">￥{{item.price}}/份</p>
               <div class="stepper">
-                <stepper :product="item" :index="index"  @changeCount="changeCount"></stepper>
+                <stepper :product="item" :key="item.productId" ref="stepper" v-if="refresh"></stepper>
               </div>
             </div>
           </li>
@@ -51,18 +47,18 @@
           <icon class="icon" type="search" size="14" />
           <input type="text" placeholder="今天想吃什么" :focus="isFocus" v-model="searchValue" />
         </div>
-        <span v-if="searchValue">搜索</span>
+        <span v-if="searchValue" @click="goSearch">搜索</span>
         <span v-else @click="showSearch=false">取消</span>
       </div>
-      <div class="search-list">
-        <div class="search-item">
+      <div class="search-list" v-if="searchList.length>0">
+        <div class="search-item" v-for="item in searchList" :key="item.productId">
           <div class="item-img">
-            <img src="../../../static/images/img1.jpg" alt />
+            <img :src="item.productPic" alt />
           </div>
-          <p class="item-name">招牌麻辣鱼</p>
-          <p class="item-price">￥98/份</p>
+          <p class="item-name">{{item.productName}}</p>
+          <p class="item-price">￥{{item.price}}/份</p>
           <div class="stepper">
-            <!-- <stepper></stepper> -->
+            <stepper :product="item" :key="item.productId" v-if="refresh1"></stepper>
           </div>
         </div>
       </div>
@@ -72,7 +68,7 @@
 
 <script>
 import stepper from "@/components/stepper";
-import { getProductData } from "@/utils/request";
+import { getProductData, getSearch } from "@/utils/request";
 export default {
   data() {
     return {
@@ -82,56 +78,85 @@ export default {
       isFocus: true,
       searchValue: "",
       productList: [],
-      selectIndex: 0
+      selectIndex: 0,
+      searchList: [],
+      productItem: [],
+      refresh: false,
+      refresh1: false
     };
   },
 
   components: { stepper },
 
   methods: {
-    changeCount(count,index){
-      this.productList[this.selectIndex].productList[index].count=count
-      console.log(this.productList[this.selectIndex].productList[index])
+    // 搜索菜品
+    goSearch() {
+      getSearch({
+        shopId: this.$store.state.shopId,
+        productName: this.searchValue
+      }).then(res => {
+        this.searchList = res.list;
+        this.getProductCount(this.searchList);
+        // 强制组件刷新
+        this.refresh1 = false;
+        this.$nextTick(() => {
+          this.refresh1 = true;
+        });
+      });
     },
     // 获取商品数
-    getProductCount(data){
-      if(data instanceof Array){
-        data.forEach(e=>{
-          if(e.productId){
-            if(wx.getStorageSync(''+e.productId)){
-              let product=wx.getStorageSync(''+e.productId)
-              e.count=product.count
-            }else{
-              e.count=0
+    getProductCount(data) {
+      if (data instanceof Array) {
+        data.forEach(e => {
+          if (e.productId) {
+            if (wx.getStorageSync("" + e.productId)) {
+              let product = wx.getStorageSync("" + e.productId);
+              e.count = product.count;
+            } else {
+              e.count = 0;
             }
           }
-        })
+        });
+        return data;
       }
     },
     chooseList(index) {
       this.selectIndex = index;
+      let productItem = this.productList[index].productList;
+      this.productItem = this.getProductCount(productItem);
+      // 强制组件刷新
+      this.refresh = false;
+      this.$nextTick(() => {
+        this.refresh = true;
+      });
     },
     toShowSearch() {
       this.showSearch = true;
     },
+    // 获取商品列表数据
     getData(id) {
       getProductData({ shopId: id }).then(res => {
         this.productList = res.productList;
-        this.productList.forEach(e=>{
-          if(e.productList){
-            this.getProductCount(e.productList)
+        this.productList.forEach(e => {
+          if (e.productList) {
+            this.getProductCount(e.productList);
           }
-        })
+        });
+        this.chooseList(0);
       });
     }
   },
 
-  mounted() {
+  onShow() {
     let self = this;
+    // var que = this.$root.$mp.query;
+    // console.log(que);
+    let shopId = this.$store.state.shopId;
+    if (shopId) {
+      self.getData(shopId);
+      // self.$store.commit("setShopId", que.shopId);
+    }
 
-    // 测试数据+++
-    self.getData(1);
-    // var query = this.$root.$mp.query;
     // self.getData(query.shopId)
     //
 

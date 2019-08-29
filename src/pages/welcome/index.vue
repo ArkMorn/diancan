@@ -64,6 +64,12 @@ export default {
   components: {},
 
   methods: {
+    //进入商店
+    goShop(item){
+      // console.log('xxx',item)
+        this.$store.commit("setShopId",item.id);
+      wx.switchTab({ url: '/pages/index/main' });
+    },
     // 获取数据
     getData(data = {}) {
       getHomeData(data).then(res => {
@@ -84,8 +90,8 @@ export default {
         self.longitude=res.longitude
         self.latitude=res.latitude 
         // 测试数据+++
-        var data = { longitude: 113.27324, latitude: 23.15792 };
-        // var data = { longitude: res.longitude, latitude: res.latitude };
+        // var data = { longitude: 113.27324, latitude: 23.15792 };
+        var data = { longitude: res.longitude, latitude: res.latitude };
         // 
         self.getData(data);
       },

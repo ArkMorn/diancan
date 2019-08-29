@@ -1,146 +1,69 @@
 <template>
   <div class="orderList">
-    <div class="orderList-item">
+    <login :showLogin="showLogin" @getUserInfo="getUserInfo" @loginSuccess="loginSuccess"></login>
+    <div
+      class="orderList-item"
+      @click="goOrderDetail(item)"
+      v-if="orderList.length>0"
+      v-for="item in orderList"
+      :key="item.orderId"
+    >
       <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
+        <img :src="item.picUrl" alt />
       </div>
       <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
+        <div class="right-top">{{item.productName}}</div>
         <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
+          <span class="center-left">{{item.shopName}}</span>
+          <span class="center-right">价钱：{{item.price}}</span>
         </div>
         <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
+          <span class="bottom-left">时间：{{item.createTime}}</span>
+          <span class="bottom-right"></span>
         </div>
       </div>
     </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
-    <div class="orderList-item">
-      <div class="item-img">
-        <img src="../../../static/images/img1.jpg" alt />
-      </div>
-      <div class="item-right">
-        <div
-          class="right-top"
-        >XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX、XXXX</div>
-        <div class="right-center">
-          <span class="center-left">嘉禾寿司</span>
-          <span class="center-right">价钱：266</span>
-        </div>
-        <div class="right-bottom">
-          <span class="bottom-left">时间：2019/06/07</span>
-          <span class="bottom-right"></span>10：12：50
-        </div>
-      </div>
-    </div>
+    <div v-if="orderList.length==0" style="text-align:center">暂无订单！</div>
   </div>
 </template>
 
 <script>
+import { orderList } from "@/utils/request";
+import login from "@/components/login";
 export default {
   data() {
-    return {};
+    return {
+      orderList: [],
+      showLogin: false
+    };
   },
 
-  components: {},
+  components: { login },
 
-  methods: {},
+  methods: {
+    loginSuccess() {
+      this.showLogin = false;
+    },
+    getUserInfo(userinfo) {},
+    goOrderDetail(item) {
+      wx.navigateTo({ url: "/pages/orderDetail/main?orderId=" + item.orderId });
+    }
+  },
 
-  created() {
-    // let app = getApp()
+  mounted() {
+    orderList().then(res => {
+      if (res.code == 401) {
+        wx.showToast({
+          title: "登录失效，请重新登录！", //提示的内容,
+          icon: "none", //图标,
+          duration: 1000, //延迟时间,
+          mask: true //显示透明蒙层，防止触摸穿透,
+        });
+        this.showLogin = true;
+      } else {
+        if (res.list) this.orderList = res.list;
+      }
+    });
   }
 };
 </script>
@@ -155,7 +78,7 @@ export default {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    box-shadow: 2px 2px 6px #909090;
+    box-shadow: 2px 2px 6px #b3b0b0;
     .item-img {
       width: 168rpx;
       height: 154rpx;
@@ -190,6 +113,7 @@ export default {
         .center-left {
         }
         .center-right {
+          color:rgb(255, 72, 0);
         }
       }
       .right-bottom {

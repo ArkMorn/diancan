@@ -1,10 +1,17 @@
-import {_CONFIG} from '../../static/config/global.config.js';
+import { _CONFIG } from '../../static/config/global.config.js';
 
 const config = {
-  login:'/app/auth',//登录
-  getHomeData:'/home/index',//首页
-  getProductData:'/home/product',//获取商品数据
-  getDiancan:'/home/scan'//点餐页面数据
+  login: '/app/auth',//登录
+  getHomeData: '/home/index',//首页
+  getProductData: '/home/product',//获取商品数据
+  getDiancan: '/home/scan',//点餐页面数据
+  getSearch: '/home/search',//搜索菜品
+  wxLogin: '/app/auth',//微信登录
+  userCenter:'/home/userCenter',//个人中心
+  orderList:'/home/order',//订单列表
+  orderDetail:'/home/orderDetail',//订单详情
+  goPay:'/home/pay',//支付接口
+  paySuccess:'/home/paySuccess',//支付成功
 }
 
 function ajax(options) {
@@ -29,24 +36,25 @@ function ajax(options) {
     });
   }
 
-
   return new Promise((resolve, reject) => {
-    var formData = (method == 'POST' || method == 'post') ? (JSON.stringify(data) || JSON.stringify({})) : (data || {});
-    var contentType='application/json'
-    if (describe == "WXLogin") {
-      var requestUrl = _CONFIG.EXTERNAL_LOGIN + api
-    }
-    else {
-      var requestUrl = _CONFIG.REQUEST_BASE_URL + api
-    }
+    // var formData = (method == 'POST' || method == 'post') ? (JSON.stringify(data) || JSON.stringify({})) : (data || {});
+    // var formData=JSON.stringify(data)
+    // if (describe == "WXLogin") {
+    //   var requestUrl = _CONFIG.EXTERNAL_LOGIN + api
+    // }
+    // var contentType = 'application/json;charset=UTF-8'
+    var contentType = 'application/x-www-form-urlencoded'
+    if(method == 'post') contentType = 'application/json;charset=UTF-8'
+    var requestUrl = _CONFIG.REQUEST_BASE_URL + api
+
     wx.request({
-      url: url || requestUrl,
+      url: requestUrl,
       method: method,
-      data: formData,
-      params: data,
+      data: data,
       header: {
-      'Content-Type': contentType
-    },
+        'Content-Type': contentType,
+        token:wx.getStorageSync('wx-token')||''
+      },
       success: function (data) {  //请求成功的回调
         if (showLoad) {
           wx.hideLoading();
@@ -56,34 +64,9 @@ function ajax(options) {
         console.log("请求：" + (describe || api))
         console.log("返回：", data.data)
         console.log("")
-        try {
-          if (data.data.hasOwnProperty('success')) {
-
-            if (data.data.success) {
-              resolve(data.data);
-            } else {
-              var e = data.data.error;
-              if (showTips) {
-                if (e && e.message.length < 20) {
-                  wx.showToast({ title: e.message, icon: "none" });
-                } else {
-                  wx.showToast({ title: "服务器异常，请稍后重试", icon: "none" });
-                }
-
-              }
-              reject(e);
-            }
-
-
-          } else {
-            if (data.data) {
-              resolve(data.data)
-            }
-          }
-        } catch (e) {
-
+        if (data.data) {
+          resolve(data.data)
         }
-
       },
       fail: function (err) { //请求失败的回调
         wx.hideLoading();
@@ -99,13 +82,13 @@ function ajax(options) {
 
 
 // =========
-export function getHomeData(data={}){
+export function getHomeData(data = {}) {
   return new Promise((resolve, reject) => {
     ajax({
       api: config.getHomeData,
       method: 'get',
       describe: '获取首页数据',
-      data:data
+      data: data
     }).then(data => {
       resolve(data);
     }).catch(err => {
@@ -115,13 +98,13 @@ export function getHomeData(data={}){
 }
 // ============
 // =========
-export function getProductData(data={}){
+export function getProductData(data = {}) {
   return new Promise((resolve, reject) => {
     ajax({
       api: config.getProductData,
       method: 'get',
       describe: '获取商品数据',
-      data:data
+      data: data
     }).then(data => {
       resolve(data);
     }).catch(err => {
@@ -130,13 +113,114 @@ export function getProductData(data={}){
   })
 }
 // ============
-export function getDiancan(data={}){
+export function getDiancan(data = {}) {
   return new Promise((resolve, reject) => {
     ajax({
       api: config.getDiancan,
       method: 'get',
       describe: '点餐页面数据',
-      data:data
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+// ============
+export function getSearch(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.getSearch,
+      method: 'get',
+      describe: '搜索菜品',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+export function wxLogin(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.wxLogin,
+      method: 'post',
+      describe: '微信登录',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+export function userCenter(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.userCenter,
+      method: 'get',
+      describe: '个人中心',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+export function orderList(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.orderList,
+      method: 'get',
+      describe: '订单列表',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+export function orderDetail(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.orderDetail,
+      method: 'get',
+      describe: '订单详情',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export function goPay(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.goPay,
+      method: 'post',
+      describe: '调起支付',
+      data: data
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export function paySuccess(data = {}) {
+  return new Promise((resolve, reject) => {
+    ajax({
+      api: config.paySuccess,
+      method: 'get',
+      describe: '支付成功',
+      data: data
     }).then(data => {
       resolve(data);
     }).catch(err => {

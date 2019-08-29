@@ -1,12 +1,12 @@
 {
   "pages": [
-    "pages/index/main",
     "pages/welcome/main",
-    "pages/cart/main",
     "pages/paySuccess/main",
-    "pages/orderDetail/main",
+    "pages/index/main",
     "pages/orderList/main",
     "pages/about/main",
+    "pages/cart/main",
+    "pages/orderDetail/main",
     "pages/diancan/main",
     "pages/template/main"
   ],
@@ -15,6 +15,11 @@
     "navigationBarBackgroundColor": "#f8d512",
     "navigationBarTitleText": "嘉禾寿司",
     "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取位置信息"
+    }
   },
   "tabBar": {
     "color": "#000",

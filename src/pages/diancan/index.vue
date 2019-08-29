@@ -4,7 +4,7 @@
       <p class="out-top">您当前在{{scanData.shopName}}</p>
       <p class="out-center">{{scanData.num}}号桌</p>
       <p class="out-bottom">请您确认桌号祝您用餐愉快！</p>
-      <div class="out-circle">立即点餐</div>
+      <div class="out-circle" @click="goShop">立即点餐</div>
     </div>
     <div class="diancan-ing">
       <div class="diancan-top">
@@ -16,35 +16,52 @@
 </template>
 
 <script>
-import {getDiancan} from '@/utils/request'
+import { getDiancan } from "@/utils/request";
 export default {
   data() {
-    return {scanData:{}};
+    return { scanData: {}, shopId: "" };
   },
 
   components: {},
 
   methods: {
-    getData(data){
-      getDiancan(data).then(res=>{
-        if(res.scan){
-        this.scanData=res.scan
+    getData(data) {
+      getDiancan(data).then(res => {
+        if (res.scan) {
+          this.scanData = res.scan;
         }
-      })
+      });
+    },
+    goShop() {
+      wx.switchTab({ url: "/pages/index/main" });
     }
   },
   mounted() {
     let query = this.$root.$mp.query;
     // console.log(this.$root)
     let scene = decodeURIComponent(query.scene);
-    console.log('this.$root',this.$root)
-    console.log('this.$root.$mp',this.$root.$mp)
-    console.log('query.scene',query.scene)
-    // =======
-    this.getData({
-      shopId:1,
-      num:1
-    })
+    console.log("this.$root", this.$root);
+    console.log("this.$root.$mp", this.$root.$mp);
+
+    if (query) {
+      if (query.shopId&&query.num) {
+        this.shopId = query.shopId;
+        this.$store.commit("setShopId", query.shopId);
+        this.$store.commit("setNum", query.num);
+        this.getData({
+          shopId: query.shopId,
+          num: query.num
+        });
+      } else {
+        wx.showToast({
+          title: "该商家不存在", //提示的内容,
+          icon: "none", //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
   }
 };
 </script>

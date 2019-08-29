@@ -1,125 +1,28 @@
 <template>
   <div class="orderDetail">
-    <div class="orderDetail-container">
-      <div class="orderDetail-item">
+    <div class="orderDetail-container" v-if="detailList.length>0">
+      <div class="orderDetail-item" v-for="item in detailList" :key="item">
         <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
+          <img :src="item.picUrl" alt=""/>
         </div>
         <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
-        </div>
-      </div>
-      <div class="orderDetail-item">
-        <div class="item-left">
-          <img src="../../../static/images/img1.jpg" alt=""/>
-        </div>
-        <div class="item-right">
-          <div class="right-top">XXXW</div>
-          <div class="right-center">XXX</div>
-          <div class="right-bottom">XXXX</div>
+          <div class="right-top">{{item.productName}}</div>
+          <div class="right-center">X{{item.num}}</div>
+          <div class="right-bottom">￥{{item.price}}/份</div>
         </div>
       </div>
     </div>
-
+    <div class="allCount">总价：￥{{count}}</div>
   </div>
 </template>
 
 <script>
+import { orderDetail } from "@/utils/request";
 export default {
   data () {
     return {
+      detailList:[],
+      count:0
     }
   },
 
@@ -130,8 +33,17 @@ export default {
   
   },
 
-  created () {
-    // let app = getApp()
+  mounted(){
+     let query = this.$root.$mp.query;
+    console.log(query)
+    if(query.orderId){
+      orderDetail({orderId:query.orderId}).then(res=>{
+          this.count=res.detail.totalPrice
+        if(res.detail.productList){
+          this.detailList=res.detail.productList
+        }
+      })
+    }
   }
 }
 </script>
@@ -140,7 +52,7 @@ export default {
   padding:29rpx 25rpx;
   .orderDetail-container{
     border-radius: 10rpx;
-    box-shadow: 2px 2px 6px #909090;
+    box-shadow: 2px 2px 6px #b3b0b0;
     padding:0 12rpx;
     .orderDetail-item{
       border-bottom: 1rpx solid rgb(243,243,243);
@@ -175,6 +87,14 @@ export default {
     .container-item:last-child{
       border-bottom: none;
     }
+  }
+  .allCount{
+    text-align: right;
+    font-size: 32rpx;
+    // line-height: 40rpx;
+    padding-top: 20rpx;
+    padding-right: 20rpx;
+    color:rgb(255,72,0);
   }
 }
 </style>
