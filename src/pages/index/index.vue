@@ -34,10 +34,12 @@
               <p class="item-right-center">好评推荐</p>
               <p class="item-right-bottom">￥{{item.price}}/份</p>
               <div class="stepper">
-                <stepper :product="item" :key="item.productId" ref="stepper" v-if="refresh"></stepper>
+                <stepper :product="item" :key="item.productId" ref="stepper" v-if="refresh" @changeNum="changeNum"></stepper>
               </div>
             </div>
           </li>
+
+          
         </ul>
       </scroll-view>
     </div>
@@ -58,11 +60,13 @@
           <p class="item-name">{{item.productName}}</p>
           <p class="item-price">￥{{item.price}}/份</p>
           <div class="stepper">
-            <stepper :product="item" :key="item.productId" v-if="refresh1"></stepper>
+            <stepper :product="item" :key="item.productId" v-if="refresh1" @changeNum="changeNum"></stepper>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="all-count" v-if="allCount>0">￥{{allCount}}</div>
   </div>
 </template>
 
@@ -82,13 +86,28 @@ export default {
       searchList: [],
       productItem: [],
       refresh: false,
-      refresh1: false
+      refresh1: false,
+      allCount:0
     };
   },
 
   components: { stepper },
-
   methods: {
+    changeNum(){
+      this.getAllCount()
+    },
+    // 获取总价
+    getAllCount(){
+      let cost=0
+      this.productList.forEach(e=>{
+        if(e.productList){
+          e.productList.forEach(even=>{
+            even.count?cost+=parseFloat(even.price)*parseFloat(even.count):cost+=0
+          })
+        }
+      })
+      this.allCount=cost
+    },
     // 搜索菜品
     goSearch() {
       getSearch({
@@ -120,18 +139,23 @@ export default {
         return data;
       }
     },
-    chooseList(index) {
-      this.selectIndex = index;
-      let productItem = this.productList[index].productList;
-      this.productItem = this.getProductCount(productItem);
+    goRefresh() {
       // 强制组件刷新
       this.refresh = false;
       this.$nextTick(() => {
         this.refresh = true;
       });
     },
+    chooseList(index) {
+      this.selectIndex = index;
+      let productItem = this.productList[index].productList;
+      this.productItem = this.getProductCount(productItem);
+      this.goRefresh();
+    },
     toShowSearch() {
       this.showSearch = true;
+      this.searchValue=''
+      this.searchList=[]
     },
     // 获取商品列表数据
     getData(id) {
@@ -142,24 +166,24 @@ export default {
             this.getProductCount(e.productList);
           }
         });
+        // +++
+        this.getAllCount()
+        // +++
         this.chooseList(0);
       });
     }
   },
-
-  onShow() {
-    let self = this;
-    // var que = this.$root.$mp.query;
-    // console.log(que);
+  mounted() {
     let shopId = this.$store.state.shopId;
+    let self = this;
+    // +++
+    // self.getData(1);
+    // +++
+
     if (shopId) {
+      // self.getData(1);
       self.getData(shopId);
-      // self.$store.commit("setShopId", que.shopId);
     }
-
-    // self.getData(query.shopId)
-    //
-
     const query = wx.createSelectorQuery();
     query
       .selectViewport()
@@ -170,8 +194,18 @@ export default {
       .boundingClientRect()
       .exec(function(res) {
         const DW = res[0].height;
-        self.wrapperHeight = DW - res[1].top;
+        self.wrapperHeight = DW - res[1].top - 20;
       });
+  },
+  onShow() {
+    this.showSearch = false;
+    this.productList.forEach(e => {
+      if (e.productList) {
+        this.getProductCount(e.productList);
+      }
+    });
+    this.goRefresh();
+    this.getAllCount()
   }
 };
 </script>
@@ -328,6 +362,7 @@ export default {
           box-sizing: border-box;
           font-size: 24rpx;
           padding: 25rpx;
+          overflow: hidden;
           .item-right-top {
             color: rgb(0, 0, 0);
             font-size: 26rpx;
@@ -376,6 +411,17 @@ export default {
 }
 .ischoose {
   color: #000;
+}
+.all-count {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40rpx;
+  background-color: rgba(236, 233, 33, 0.521);
+  color:rgb(255, 72, 0);
+  text-align: center;
+  font-size: 30rpx;
 }
 </style>
 

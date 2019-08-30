@@ -4,7 +4,7 @@
       <p class="out-top">您当前在{{scanData.shopName}}</p>
       <p class="out-center">{{scanData.num}}号桌</p>
       <p class="out-bottom">请您确认桌号祝您用餐愉快！</p>
-      <div class="out-circle" @click="goShop">立即点餐</div>
+      <div class="out-circle"><button  open-type="getUserInfo" @getuserinfo="goLogin">立即点餐</button></div>
     </div>
     <div class="diancan-ing">
       <div class="diancan-top">
@@ -17,6 +17,7 @@
 
 <script>
 import { getDiancan } from "@/utils/request";
+import { login, getToken, setToken, removeToken } from "@/utils/utils";
 export default {
   data() {
     return { scanData: {}, shopId: "" };
@@ -25,6 +26,13 @@ export default {
   components: {},
 
   methods: {
+    goLogin(e) {
+      if (e) {
+        login(e,()=>{
+          this.goShop()
+        });
+      }
+    },
     getData(data) {
       getDiancan(data).then(res => {
         if (res.scan) {
@@ -93,6 +101,7 @@ export default {
       color: rgba(0, 0, 0, 0.5);
     }
     .out-circle {
+      button{
       width: 216rpx;
       height: 216rpx;
       border-radius: 50%;
@@ -102,7 +111,7 @@ export default {
       position: relative;
       left: 50%;
       margin-left: -108rpx;
-      margin-top: 44rpx;
+      margin-top: 44rpx;}
     }
   }
   .diancan-ing {

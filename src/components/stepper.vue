@@ -57,9 +57,8 @@ export default {
       this.changeCount();
     },
     changeCount() {
-      // console.log(123)
-      // console.log(this.product)
       this.count = this.product.count;
+      this.$emit('changeNum')
       // this.$emit('changeCount',this.product.count,this.index)
     }
   },
@@ -76,21 +75,30 @@ export default {
 .right-count1,
 .right-count2 {
   background-color: rgb(243, 245, 249);
-  padding: 0.4rpx;
+  // padding: 10rpx;
+  font-size: 30rpx;
+  text-align: center;
 }
 .right-count1 {
   width: 132rpx;
-  height: 30rpx;
-  line-height: 30rpx;
+  height: 50rpx;
+  line-height: 50rpx;
   border-radius: 30rpx;
   display: flex;
   justify-content: space-around;
 }
 .right-count2 {
   border-radius: 50%;
-  width: 30rpx;
-  height: 30rpx;
-  line-height: 30rpx;
+  width: 50rpx;
+  height: 50rpx;
+  line-height: 50rpx;
   text-align: center;
+}
+.count-reduce,.count-add,.count-none{
+
+// line-height: 30rpx;
+display: inline-block;
+height: 50rpx;
+width: 50rpx;
 }
 </style>

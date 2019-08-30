@@ -1,7 +1,7 @@
 <template>
   <div class="cart">
     <login :showLogin="showLogin" @getUserInfo="getUserInfo" @loginSuccess="loginSuccess"></login>
-    <div class="cart-container" v-if="productList.length>0">
+    <div class="cart-container" v-if="!isNothing">
       <div
         class="cart-item"
         v-for="item in productList"
@@ -21,13 +21,14 @@
           <p class="right-name">{{item.productName}}</p>
           <p class="right-price">￥{{item.price}}/份</p>
           <div class="right-count1">
-            <stepper :product="item"></stepper>
+            <stepper :product="item"  @changeNum="changeNum"></stepper>
           </div>
         </div>
       </div>
     </div>
+    <div v-else class="nonthing">无</div>
     <div class="cart-bottom">
-      <div class="item-left" v-if="selectAll" @click.stop="selectAllFn" style="padding-top:30rpx">
+      <div class="item-left" v-if="selectAll&&!isNothing" @click.stop="selectAllFn" style="padding-top:30rpx">
         <icon type="success" size="20" color="#green" />
       </div>
       <div class="item-left" v-else @click.stop="selectAllFn">
@@ -52,7 +53,8 @@ export default {
     return {
       productList: [],
       selectAll: false,
-      showLogin: false
+      showLogin: false,
+      isNothing: true
     };
   },
 
@@ -75,27 +77,20 @@ export default {
           this.selectAll = false;
         }
       }
+    },
+    isNothingAll(){
+      if (this.productList.length !== 0) {
+        if (this.productList.every(val => val.count==0)) {
+          this.isNothing = true;
+        } else {
+          this.isNothing = false;
+        }
+      }
     }
-    // productList() {
-    //   let list = wx.getStorageInfoSync();
-    //   let self = this;
-    //   let productList = [];
-    //   console.log(list);
-    //   if (list) {
-    //     if (list.keys) {
-    //       list.keys.forEach(e => {
-    //         if (e.indexOf("wx") == -1) {
-    //           let item = wx.getStorageSync(e);
-    //           item.isSelect = false;
-    //           productList.push(item);
-    //         }
-    //       })
-    //     }
-    //   }
-    //   return productList
-    // }
   },
   methods: {
+    changeNum(){
+    },
     // 微信支付
     wxPay(par) {
       wx.requestPayment({
@@ -198,7 +193,7 @@ export default {
         list.keys.forEach(e => {
           if (e.indexOf("wx") == -1) {
             let item = wx.getStorageSync(e);
-            item.isSelect = false;
+            item.isSelect = true;
             self.productList.push(item);
           }
         });
@@ -333,5 +328,10 @@ export default {
   // border-radius: 30rpx;
   // display: flex;
   // justify-content: space-around;
+}
+.nonthing{
+  font-size: 40rpx;
+  text-align: center;
+  color:#ddd;
 }
 </style>

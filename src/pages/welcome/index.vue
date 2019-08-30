@@ -33,12 +33,13 @@
             </div>
             <div class="top-name">
               <p class="name1">{{item.shopName}}</p>
-              <!-- <p class="name2">西式简餐/轻食</p> -->
+              <p class="name2">{{item.phone}}</p>
             </div>
           </div>
           <div class="item-bottom">
             <img :src="item.picUrl" alt />
           </div>
+          <p class="p2">{{item.address}}</p>
         </div>
       </div>
     </div>
@@ -51,11 +52,6 @@ export default {
   data() {
     return {
       result:{},
-      swiperImg: [
-        { src: require("../../../static/images/img1.jpg") },
-        { src: require("../../../static/images/img2.jpg") },
-        { src: require("../../../static/images/img3.jpg") }
-      ],
       latitude:"",
       longitude:"",
     };
@@ -143,6 +139,7 @@ export default {
     background-color: #fff;
   }
   .recommend-list {
+    margin-top: 12rpx;
     display: flex;
     justify-content: space-between;
     padding: 0 20rpx;
@@ -190,6 +187,11 @@ export default {
           width: 260rpx;
           height: 260rpx;
         }
+      }
+      .p2{
+        font-size: 24rpx;
+        color: rgb(173, 173, 173);
+        text-align: center;
       }
     }
   }

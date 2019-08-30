@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/welcome/main",
-    "pages/paySuccess/main",
     "pages/index/main",
+    "pages/paySuccess/main",
     "pages/orderList/main",
     "pages/about/main",
     "pages/cart/main",
