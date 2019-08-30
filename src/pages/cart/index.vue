@@ -4,12 +4,12 @@
     <div class="cart-container" v-if="!isNothing">
       <div
         class="cart-item"
-        v-for="item in productList"
+        v-for="(item,index) in productList"
         :key="item.productId+item.count"
         v-if="item.count>0"
       >
         <div class="item-left" v-if="item.isSelect" @click="item.isSelect=false">
-          <icon type="success" size="20" color="#f8d512" />
+          <icon type="success" size="25" color="#f8d512" class="icon"/>
         </div>
         <div class="item-left" v-else @click="item.isSelect=true">
           <div class="circle"></div>
@@ -20,6 +20,7 @@
         <div class="item-right">
           <p class="right-name">{{item.productName}}</p>
           <p class="right-price">￥{{item.price}}/份</p>
+          <div class="delete" @click="deleteProduct(item,index)">X</div>
           <div class="right-count1">
             <stepper :product="item"  @changeNum="changeNum"></stepper>
           </div>
@@ -29,13 +30,13 @@
     <div v-else class="nonthing">无</div>
     <div class="cart-bottom">
       <div class="item-left" v-if="selectAll&&!isNothing" @click.stop="selectAllFn" style="padding-top:30rpx">
-        <icon type="success" size="20" color="#green" />
+        <icon type="success" size="25" color="#green"  class="icon"/>
       </div>
       <div class="item-left" v-else @click.stop="selectAllFn">
         <div class="circle"></div>
       </div>
       <p class="p1">
-        <span class="span1">全选</span>
+        <span class="span1">全选2</span>
         <span class="span2">合计：</span>
         <span class="span3">￥{{selectCost}}元</span>
       </p>
@@ -89,6 +90,28 @@ export default {
     }
   },
   methods: {
+    // 删除商品
+    deleteProduct(item,index){
+      console.log(item,index)
+      wx.showModal({
+        title: '提示', //提示的标题,
+        content: '是否删除该商品', //提示的内容,
+        showCancel: true, //是否显示取消按钮,
+        cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+        cancelColor: '#000000', //取消按钮的文字颜色,
+        confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: '#3CC51F', //确定按钮的文字颜色,
+        success: res => {
+          if (res.confirm) {
+            // console.log('用户点击确定')
+            wx.removeStorageSync(''+item.productId);
+            this.productList[index].count=0
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      });
+    },
     changeNum(){
     },
     // 微信支付
@@ -222,11 +245,12 @@ export default {
 
 <style lang="less" scoped>
 .circle {
-  width: 45rpx;
-  height: 45rpx;
+  width: 48rpx;
+  height: 48rpx;
   border: 1rpx solid #000;
   border-radius: 50%;
   background-color: #fff;
+  box-sizing: border-box;
 }
 .cart {
   padding: 29rpx 22rpx 107rpx 29rpx;
@@ -240,7 +264,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
       margin-bottom: 10rpx;
-      height: 95rpx;
+      height: 120rpx;
       .item-left {
       }
       .item-img {
@@ -333,5 +357,17 @@ export default {
   font-size: 40rpx;
   text-align: center;
   color:#ddd;
+}
+.delete{
+  position: absolute;
+  right: -20rpx;
+  top:0rpx;
+  border-radius: 50%;
+  // background-color: rgb(243, 245, 249);
+  width: 40rpx;
+  height: 40rpx;
+  font-size: 20rpx;
+  text-align: center;
+  color:#b3b0b0;
 }
 </style>

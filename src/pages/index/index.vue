@@ -3,7 +3,7 @@
     <div class="index-search">
       <div class="search-wrap">
         <icon class="icon" type="search" size="14" />
-        <input type="text" placeholder="今天想吃什么" @focus="toShowSearch" />
+        <input type="text" placeholder="今天想吃什么" @focus.prevent="toShowSearch" />
       </div>
     </div>
     <div class="index-container">
@@ -252,7 +252,8 @@ export default {
       display: inline-block;
       font-size: 28rpx;
       color: #000;
-      margin-top: 14rpx;
+      // margin-top: 14rpx;
+      line-height: 50rpx;
       vertical-align: top;
       margin-left: 20rpx;
     }
@@ -422,6 +423,10 @@ export default {
   color:rgb(255, 72, 0);
   text-align: center;
   font-size: 30rpx;
+}
+input{
+  height: 50rpx;
+  line-height: 50rpx;
 }
 </style>
 
