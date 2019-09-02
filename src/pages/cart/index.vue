@@ -9,7 +9,7 @@
         v-if="item.count>0"
       >
         <div class="item-left" v-if="item.isSelect" @click="item.isSelect=false">
-          <icon type="success" size="25" color="#f8d512" class="icon"/>
+          <icon type="success" size="25" color="#f8d512" class="icon" />
         </div>
         <div class="item-left" v-else @click="item.isSelect=true">
           <div class="circle"></div>
@@ -22,21 +22,26 @@
           <p class="right-price">￥{{item.price}}/份</p>
           <div class="delete" @click="deleteProduct(item,index)">X</div>
           <div class="right-count1">
-            <stepper :product="item"  @changeNum="changeNum"></stepper>
+            <stepper :product="item" @changeNum="changeNum"></stepper>
           </div>
         </div>
       </div>
     </div>
     <div v-else class="nonthing">无</div>
     <div class="cart-bottom">
-      <div class="item-left" v-if="selectAll&&!isNothing" @click.stop="selectAllFn" style="padding-top:30rpx">
-        <icon type="success" size="25" color="#green"  class="icon"/>
+      <div
+        class="item-left"
+        v-if="selectAll&&!isNothing"
+        @click.stop="selectAllFn"
+        style="padding-top:30rpx"
+      >
+        <icon type="success" size="25" color="#green" class="icon" />
       </div>
       <div class="item-left" v-else @click.stop="selectAllFn">
         <div class="circle"></div>
       </div>
       <p class="p1">
-        <span class="span1">全选2</span>
+        <span class="span1">全选</span>
         <span class="span2">合计：</span>
         <span class="span3">￥{{selectCost}}元</span>
       </p>
@@ -79,9 +84,9 @@ export default {
         }
       }
     },
-    isNothingAll(){
+    isNothingAll() {
       if (this.productList.length !== 0) {
-        if (this.productList.every(val => val.count==0)) {
+        if (this.productList.every(val => val.count == 0)) {
           this.isNothing = true;
         } else {
           this.isNothing = false;
@@ -91,29 +96,28 @@ export default {
   },
   methods: {
     // 删除商品
-    deleteProduct(item,index){
-      console.log(item,index)
+    deleteProduct(item, index) {
+      console.log(item, index);
       wx.showModal({
-        title: '提示', //提示的标题,
-        content: '是否删除该商品', //提示的内容,
+        title: "提示", //提示的标题,
+        content: "是否删除该商品", //提示的内容,
         showCancel: true, //是否显示取消按钮,
-        cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
-        cancelColor: '#000000', //取消按钮的文字颜色,
-        confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
-        confirmColor: '#3CC51F', //确定按钮的文字颜色,
+        cancelText: "取消", //取消按钮的文字，默认为取消，最多 4 个字符,
+        cancelColor: "#000000", //取消按钮的文字颜色,
+        confirmText: "确定", //确定按钮的文字，默认为取消，最多 4 个字符,
+        confirmColor: "#3CC51F", //确定按钮的文字颜色,
         success: res => {
           if (res.confirm) {
             // console.log('用户点击确定')
-            wx.removeStorageSync(''+item.productId);
-            this.productList[index].count=0
+            wx.removeStorageSync("" + item.productId);
+            this.productList[index].count = 0;
           } else if (res.cancel) {
-            console.log('用户点击取消')
+            console.log("用户点击取消");
           }
         }
       });
     },
-    changeNum(){
-    },
+    changeNum() {},
     // 微信支付
     wxPay(par) {
       wx.requestPayment({
@@ -195,7 +199,8 @@ export default {
               this.productList.forEach(e => {
                 if (e.isSelect) {
                   // console.log(e.productId);
-                  wx.removeStorageSync(''+e.productId);
+                  wx.removeStorageSync("" + e.productId);
+                  e.count = 0;
                 }
               });
               this.wxPay(res.pay);
@@ -353,21 +358,21 @@ export default {
   // display: flex;
   // justify-content: space-around;
 }
-.nonthing{
+.nonthing {
   font-size: 40rpx;
   text-align: center;
-  color:#ddd;
+  color: #ddd;
 }
-.delete{
+.delete {
   position: absolute;
   right: -20rpx;
-  top:0rpx;
+  top: 0rpx;
   border-radius: 50%;
   // background-color: rgb(243, 245, 249);
   width: 40rpx;
   height: 40rpx;
   font-size: 20rpx;
   text-align: center;
-  color:#b3b0b0;
+  color: #b3b0b0;
 }
 </style>
