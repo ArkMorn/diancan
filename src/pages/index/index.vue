@@ -1,9 +1,11 @@
 <template>
   <div class="index">
     <div class="index-search">
-      <div class="search-wrap">
-        <icon class="icon" type="search" size="14" />
-        <input type="text" placeholder="今天想吃什么" @focus.prevent="toShowSearch" />
+      <div class="search-wrap" @click="toShowSearch">
+        <!-- <icon class="icon" type="search" size="14" /> -->
+        <!-- <input type="text" placeholder="今天想吃什么" @focus.prevent="toShowSearch" /> -->
+        <!-- <div class="input-text"></div> -->
+        <icon class="icon" type="search" size="14" />今天想吃什么
       </div>
     </div>
     <div class="index-container">
@@ -307,6 +309,9 @@ export default {
     border-radius: 30rpx;
     padding-left: 38%;
     font-size: 28rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    color:rgba(128, 128, 128, 0.5);
   }
   .icon {
     position: absolute;
@@ -425,6 +430,10 @@ export default {
   font-size: 30rpx;
 }
 input{
+  height: 50rpx;
+  line-height: 50rpx;
+}
+.input-text{
   height: 50rpx;
   line-height: 50rpx;
 }
