@@ -120,6 +120,7 @@ export default {
     changeNum() {},
     // 微信支付
     wxPay(par) {
+      let self = this;
       wx.requestPayment({
         // appId: config.result.appid,
         timeStamp: par.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
@@ -128,6 +129,13 @@ export default {
         signType: par.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
         paySign: par.paySign, // 支付签名
         success: function(res) {
+          self.productList.forEach(e => {
+            if (e.isSelect) {
+              // console.log(e.productId);
+              wx.removeStorageSync("" + e.productId);
+              e.count = 0;
+            }
+          });
           // 支付成功后的回调函数
           if (par.orderId) {
             wx.navigateTo({
@@ -137,9 +145,9 @@ export default {
         },
         cancel: function(err) {
           // return
-          wx.navigateTo({
-            url: "/pages/orderList/main"
-          });
+          // wx.navigateTo({
+          //   url: "/pages/orderList/main"
+          // });
         }
       });
     },
@@ -196,13 +204,6 @@ export default {
           } else {
             //微信支付
             if (res.pay) {
-              this.productList.forEach(e => {
-                if (e.isSelect) {
-                  // console.log(e.productId);
-                  wx.removeStorageSync("" + e.productId);
-                  e.count = 0;
-                }
-              });
               this.wxPay(res.pay);
             }
           }
