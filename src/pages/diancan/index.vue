@@ -48,8 +48,8 @@ export default {
     let query = this.$root.$mp.query;
     // console.log(this.$root)
     let scene = decodeURIComponent(query.scene);
-    console.log("this.$root", this.$root);
-    console.log("this.$root.$mp", this.$root.$mp);
+    // console.log("this.$root", this.$root);
+    // console.log("this.$root.$mp", this.$root.$mp);
 
     if (query) {
       if (query.shopId&&query.num) {

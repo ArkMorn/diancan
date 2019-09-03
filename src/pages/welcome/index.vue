@@ -114,6 +114,7 @@ export default {
   }
   image {
     height: 324rpx;
+    width:100%;
   }
 }
 .address {

@@ -129,25 +129,30 @@ export default {
         signType: par.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
         paySign: par.paySign, // 支付签名
         success: function(res) {
+          let count=0
           self.productList.forEach(e => {
             if (e.isSelect) {
-              // console.log(e.productId);
               wx.removeStorageSync("" + e.productId);
               e.count = 0;
             }
+            count+=e.count
           });
+          if(count==0){
+            self.isNothing=true
+          }
+          // console.log(self.productList)
+          // return
+
           // 支付成功后的回调函数
           if (par.orderId) {
-            wx.navigateTo({
-              url: "/pages/paySuccess/main?orderId=" + par.orderId
-            });
+            // setTimeout(() => {
+              wx.navigateTo({
+                url: "/pages/paySuccess/main?orderId=" + par.orderId
+              });
+            // }, 100);
           }
         },
         cancel: function(err) {
-          // return
-          // wx.navigateTo({
-          //   url: "/pages/orderList/main"
-          // });
         }
       });
     },
